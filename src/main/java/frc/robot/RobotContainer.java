@@ -45,6 +45,7 @@ public class RobotContainer {
     private static Climber climber;
     private static ClimberAngle climberAngle;
 
+
     private LoggedCommandController driverController;
     private LoggedDashboardChooser<Command> autoChooser;
 
@@ -73,6 +74,10 @@ public class RobotContainer {
 
         configureAuto();
         configureBindings();
+
+        hachshara();
+
+
         configureTestBindings();
 
         if (GeneralConstants.kRobotMode.isSim()) {
@@ -84,13 +89,13 @@ public class RobotContainer {
                     }
 
                     GamePieceProjectile ball = new RebuiltFuelOnFly(
-                        RobotState.getInstance().getRobotPose().getTranslation(),
-                        new Translation2d(),
-                        Swerve.getInstance().getSpeeds().getAsFieldRelative(RobotState.getInstance().getRobotPose().getRotation()),
-                        RobotState.getInstance().getRobotPose().getRotation(),
-                        Meters.of(0.481),
-                        MetersPerSecond.of(13.25 * Math.abs(shooter.getGoal()) / 100),
-                        Degrees.of(60)
+                            RobotState.getInstance().getRobotPose().getTranslation(),
+                            new Translation2d(),
+                            Swerve.getInstance().getSpeeds().getAsFieldRelative(RobotState.getInstance().getRobotPose().getRotation()),
+                            RobotState.getInstance().getRobotPose().getRotation(),
+                            Meters.of(0.481),
+                            MetersPerSecond.of(13.25 * Math.abs(shooter.getGoal()) / 100),
+                            Degrees.of(60)
                     );
 
                     balls.add(ball);
@@ -98,6 +103,20 @@ public class RobotContainer {
                 }
             }).andThen(Commands.waitSeconds(0.1)).repeatedly().ignoringDisable(true));
         }
+    }
+
+    private void hachshara() {
+        driverController.R1().whileTrue(Commands.run(() -> {
+            System.out.println("Hello world");
+        }));
+        driverController.R1().toggleOnFalse(Commands.none());
+
+        driverController.R2().onTrue(Commands.run(() -> {
+            System.out.println("HelloWorld");
+        }).withTimeout(3));
+
+
+
     }
 
     public static SwerveSubsystem getSwerve() {
@@ -142,13 +161,13 @@ public class RobotContainer {
 
     private void configureAuto() {
         AutoBuilder.configure(
-            RobotState.getInstance()::getRobotPose,
-            RobotState.getInstance()::setRobotPose,
-            Swerve.getInstance()::getSpeeds,
-            swerveSubsystem::setAutoInput,
-            SubsystemConstants.kAutonomyConfig,
-            SubsystemConstants.kSwerve.special.robotConfig,
-            () -> false
+                RobotState.getInstance()::getRobotPose,
+                RobotState.getInstance()::setRobotPose,
+                Swerve.getInstance()::getSpeeds,
+                swerveSubsystem::setAutoInput,
+                SubsystemConstants.kAutonomyConfig,
+                SubsystemConstants.kSwerve.special.robotConfig,
+                () -> false
         );
 
         NamedCommands.registerCommand("Prepare Shoot", StateMachine.getInstance().changeRobotStateCommand(States.SHOOT_READY));
@@ -158,28 +177,28 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        driverController.povDown().onTrue(Commands.runOnce(() -> RobotState.getInstance().resetGyro(visionSubsystem.getLastMegaTag1Pose().getRotation())));
-        driverController.povLeft().onTrue(Commands.runOnce(() -> RobotState.getInstance().resetGyro(Rotation2d.kZero)));
-        driverController.povRight().onTrue(notTest(StateMachine.getInstance().changeRobotStateCommand(States.RESET, true, false)));
-        driverController.povUp().onTrue(notTest(StateMachine.getInstance().changeRobotStateCommand(States.DUMP)));
-
-        driverController.L1().onTrue(notTest(StateMachine.getInstance().changeRobotStateCommand(States.IDLE, true, false)));
-
-        driverController.R1().onTrue(notTest(intake()));
-
-        driverController.R2().onTrue(notTest(Commands.runOnce(() -> {
-            StateMachine.getInstance().changeRobotState(States.SHOOT);
-            StateMachine.getInstance().changeRobotState(States.SHOOT_READY);
-        })));
-
-        driverController.cross().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.ON_MOVE)));
-        driverController.circle().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.SNAP_RING)));
-        driverController.triangle().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.LOCK)));
-        driverController.square().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.DELIVERY)));
-
-        driverController.L2().onTrue(notTest(Commands.runOnce(() -> {
-            // Climbing shit
-        })));
+//        driverController.povDown().onTrue(Commands.runOnce(() -> RobotState.getInstance().resetGyro(visionSubsystem.getLastMegaTag1Pose().getRotation())));
+//        driverController.povLeft().onTrue(Commands.runOnce(() -> RobotState.getInstance().resetGyro(Rotation2d.kZero)));
+//        driverController.povRight().onTrue(notTest(StateMachine.getInstance().changeRobotStateCommand(States.RESET, true, false)));
+//        driverController.povUp().onTrue(notTest(StateMachine.getInstance().changeRobotStateCommand(States.DUMP)));
+//
+//        driverController.L1().onTrue(notTest(StateMachine.getInstance().changeRobotStateCommand(States.IDLE, true, false)));
+//
+//        driverController.R1().onTrue(notTest(intake()));
+//
+//        driverController.R2().onTrue(notTest(Commands.runOnce(() -> {
+//            StateMachine.getInstance().changeRobotState(States.SHOOT);
+//            StateMachine.getInstance().changeRobotState(States.SHOOT_READY);
+//        })));
+//
+//        driverController.cross().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.ON_MOVE)));
+//        driverController.circle().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.SNAP_RING)));
+//        driverController.triangle().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.LOCK)));
+//        driverController.square().onTrue(Commands.runOnce(() -> RobotState.setShootingMode(States.ShootingMode.DELIVERY)));
+//
+//        driverController.L2().onTrue(notTest(Commands.runOnce(() -> {
+//            // Climbing shit
+//        })));
     }
 
     private Command intake() {
@@ -196,17 +215,17 @@ public class RobotContainer {
 
     private Command inTest(Command command) {
         return Commands.either(
-            command,
-            Commands.none(),
-            DriverStation::isTest
+                command,
+                Commands.none(),
+                DriverStation::isTest
         );
     }
 
     private Command notTest(Command command) {
         return Commands.either(
-            Commands.none(),
-            command,
-            DriverStation::isTest
+                Commands.none(),
+                command,
+                DriverStation::isTest
         );
     }
 
